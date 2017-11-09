@@ -1,0 +1,116 @@
+
+<launch>
+<param name="robot_goal" value="robot_0/base_pose_ground_truth"/>
+
+<node name = "stageros" pkg="stage_ros" type = "stageros" args="$(find wolf)/world/new.world" />
+
+<node name="map_server" pkg="map_server" type="map_server" args="$(find wolf)/world/tutorial400.yaml" respawn="false"> 
+
+<param name="frame_id" value="/map" />
+
+</node>
+
+<!--robot_0-->
+
+<group ns="robot_0">
+
+<param name="tf_prefix" value="robot_0" />
+
+<param name="robot_id" value="0"/>
+
+<node name="avoid" pkg="wolf" type="avoid" respawn="false" output="screen"/>
+
+</group>
+
+<!--robot_1-->
+
+<group ns="robot_1">
+
+<param name="tf_prefix" value="robot_1" />
+
+<param name="robot_id" type="int"  value="1"/>
+
+<node name="Distance1" pkg="wolf" type="Distance" respawn="false" output="screen">
+
+<param name="robot_this" value="robot_1/base_pose_ground_truth"/>
+
+</node>
+
+<node name="action1" pkg="wolf" type="action" respawn="false" output="screen"/>
+
+</group>
+
+<!--robot_2-->
+
+<group ns="robot_2">
+
+<param name="tf_prefix" value="robot_2" />
+
+<param name="robot_id" type="int"  value="2"/>
+
+<node name="Distance2" pkg="wolf" type="Distance" respawn="false" output="screen">
+
+<param name="robot_this" value="robot_2/base_pose_ground_truth"/>
+
+</node>
+
+<node name="action2" pkg="wolf" type="action" respawn="false" output="screen"/>
+
+</group>
+
+<!--robot_3-->
+
+<group ns="robot_3">
+
+<param name="tf_prefix" value="robot_3" />
+
+<param name="robot_id" type="int"  value="3"/>
+
+<node name="Distance3" pkg="wolf" type="Distance" respawn="false" output="screen">
+
+<param name="robot_this" value="robot_3/base_pose_ground_truth"/>
+
+</node>
+
+<node name="action3" pkg="wolf" type="action" respawn="false" output="screen"/>
+
+</group>
+
+<!--robot_4-->
+
+<group ns="robot_4">
+
+<param name="tf_prefix" value="robot_4" />
+
+<param name="robot_id" type="int"  value="4"/>
+
+<node name="Distance4" pkg="wolf" type="Distance" respawn="false" output="screen">
+
+<param name="robot_this" value="robot_4/base_pose_ground_truth"/>
+
+</node>
+
+<node name="action4" pkg="wolf" type="action" respawn="false" output="screen"/>
+
+</group>
+
+<!--robot_5-->
+
+<group ns="robot_5">
+
+<param name="tf_prefix" value="robot_5" />
+
+<param name="robot_id" type="int"  value="5"/>
+
+<node name="Distance5" pkg="wolf" type="Distance" respawn="false" output="screen">
+
+<param name="robot_this" value="robot_5/base_pose_ground_truth"/>
+
+</node>
+
+<node name="action5" pkg="wolf" type="action" respawn="false" output="screen"/>
+
+</group>
+
+<node name="decide" pkg="wolf" type="decide" respawn="false" output="screen"/>
+</launch>

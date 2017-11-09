@@ -1,0 +1,94 @@
+define block model
+(
+  size [0.500 0.500 0.500]
+  gui_nose 1
+)
+
+
+define topurg ranger
+(
+	sensor( 			
+    range [ 0.0  30.0 ] 
+    fov 270.25
+   samples 1081
+  )
+
+  # generic model properties
+  color "red"
+  size [ 0.500 0.500 0.100 ]
+)
+
+define erratic position
+(
+  #size [0.415 0.392 0.25]
+  size [0.350 0.350 0.250]
+  origin [-0.050 0.000 0.000 0.000]
+  gui_nose 1
+  drive "omni"
+  topurg(pose [ 0.050 0.000 0.000 0.000 ])
+  block(pose [-0.400 0.000 0.000 0.000 ] color "red")  
+)
+
+
+define floorplan model
+(
+  # sombre, sensible, artistic
+  color "gray30"
+
+  # most maps will need a bounding box
+  boundary 1
+
+  gui_nose 0
+  gui_grid 0
+
+  gui_outline 0
+  gripper_return 0
+  fiducial_return 0
+  ranger_return 1.000
+)
+
+# set the resolution of the underlying raytrace model in meters
+resolution 0.02
+
+interval_sim 100  # simulation timestep in milliseconds
+
+
+window
+( 
+  size [ 745 448 ] 
+
+  rotate [ 7.000 -1.000 ]
+  scale 16.260 
+)
+
+# load an environment bitmap
+floorplan
+( 
+  name "willow"
+  bitmap "tutorial400.png"
+  size [ 50.000 50.000 3.000 ]
+  pose [  0.000  0.000 0.000 0.000 ]
+)
+
+# throw in a robot
+erratic 
+(pose [ -9.544 2.604 5.000  0.000 ] 
+name "robot_0" 
+color "yellow")
+
+
+erratic 
+(pose [ -10.232 6.886 5.000 0.000 ] 
+name "robot_1" 
+color "red")
+
+erratic 
+(pose [ -20.351 0.251 5.000 0.000 ] 
+name "robot_2" 
+color "red")	
+
+erratic 
+(pose [ -10.801 -7.667 5.000 0.000 ] 
+name "robot_3" 
+color "red")
+
