@@ -29,12 +29,19 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+/*
+  *************************************************
+   设置参数界面，其中包含追击机器人数量和机器人的初始位置
+  *************************************************
+*/
+
 QGroupBox *MainWindow::createParameterBox()
 {
     parameterBox = new QGroupBox(tr("第一步：设置参数"));
     parameterBox->setStyleSheet(qss1);
     robotNumberLaber = new QLabel(tr("机器人数量"));
-    robotNumberLaber->setToolTip(tr("追击者数量"));
+    robotNumberLaber->setToolTip(tr("角色为追击者的数量"));
     robotlocationLabel = new QLabel(tr("机器人位置"));
     robotlocationLabel->setToolTip(tr("启动stage手动修改机器人位置"));
     parameterOk = new QPushButton(tr("确认"));
@@ -61,6 +68,14 @@ QGroupBox *MainWindow::createParameterBox()
 
     return parameterBox;
 }
+
+
+/*
+  *************************************************************
+   加载任务界面，Goal代表被追击的目标机器人，只有一个任务avoid;
+   其他机器人均为追击的机器人，Action代表追击任务，Distance表示测距任务。
+  *************************************************************
+*/
 
 QGroupBox *MainWindow::createloadBox()
 {
@@ -138,6 +153,12 @@ QGroupBox *MainWindow::createloadBox()
     return loadBox;
 }
 
+/*
+ **********
+  启动和结束
+ **********
+*/
+
 QGroupBox *MainWindow::createcommandBox()
 {
     commandBox = new QGroupBox(tr("第三步：执行任务"));
@@ -166,6 +187,12 @@ void MainWindow::changeLocation()
     //exit(0);
 }
 
+/*
+ ************
+  创建world文件
+ ************
+*/
+
 void MainWindow::createWorld()
 {
     QFile file1("/home/zhang/catkin_ws/src/wolf/world/willow-erratic.world");
@@ -193,6 +220,12 @@ void MainWindow::createWorld()
     }
         return;
 }
+
+/*
+ **************
+  创建launch文件
+ **************
+*/
 
 void MainWindow::createLaunch()
 {
@@ -248,6 +281,12 @@ void MainWindow::createLaunch()
     writer.writeEndElement();
 }
 
+/*
+ **************
+  判断复选框状态
+ **************
+*/
+
 void MainWindow::checkBoxChangeTest()
 {
     if(robot0Avoid->checkState() == Qt::Checked)
@@ -288,6 +327,12 @@ void MainWindow::getnumber(QString number)
 {
     robotnumber = number.toInt();
 }
+
+/*
+ *****************
+  隐藏和显示部分内容
+ *****************
+*/
 
 void MainWindow::showButtons()
 {
