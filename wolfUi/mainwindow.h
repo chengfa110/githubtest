@@ -22,6 +22,19 @@ public:
     void startCommand();
     void endCommand();
 
+    QString qss1="QGroupBox {\
+    border: 3px solid #2B2B2B;\
+    border-radius: 4px;\
+    margin-top: 2ex; \
+    font-family:仿宋;\
+    font:blod 18px;\
+    }\
+    QGroupBox::title {\
+    subcontrol-origin: margin;\
+    subcontrol-position: top left;\
+    padding: 0 4px;\
+    }";
+
 private:
     QGroupBox *createParameterBox();
     QGroupBox *createloadBox();
@@ -31,6 +44,7 @@ private:
     QGroupBox *loadBox;
     QGroupBox *commandBox;
     QLabel *robotNumberLaber;
+    QLabel *robotNumberLaber1;
     QLabel *robotlocationLabel;
     QLabel *robot0;
     QLabel *robot1;
@@ -45,6 +59,8 @@ private:
     QPushButton *endCommandButton;
     QPushButton *createLaunchButton;
     QPushButton *checkOk;
+    QPushButton *openWorldButton;
+    QPushButton *openLaunchButton;
     QComboBox *robotNumberBox;
     QCheckBox *robot0Avoid;
     QCheckBox *robot1Action;
@@ -71,6 +87,8 @@ public slots:
     void createLaunch();
     void createStartThread();
     void createEndThread();
+    void openWorld();
+    void openLaunch();
 };
 
 #endif // MAINWINDOW_H

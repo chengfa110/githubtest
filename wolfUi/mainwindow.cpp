@@ -4,25 +4,23 @@
 #include <QFile>
 #include <QDebug>
 #include <QXmlStreamWriter>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
     ui->setupUi(this);
     QGridLayout *grid = new QGridLayout;
     grid->addWidget(createParameterBox(),0,0);
     grid->addWidget(createloadBox(),1,0);
     grid->addWidget(createcommandBox(),2,0);
 
-
     QWidget *widget = new QWidget;
     widget->setLayout(grid);
-    widget->resize(480, 320);
-    widget->setMaximumSize(400,400);
+    widget->resize(580, 320);
+    widget->setMaximumSize(450,500);
     setCentralWidget(widget);
-
     setWindowTitle(tr("Group Boxes"));
 }
 
@@ -33,18 +31,23 @@ MainWindow::~MainWindow()
 
 QGroupBox *MainWindow::createParameterBox()
 {
-    parameterBox = new QGroupBox(tr("&Parameter"));
-    robotNumberLaber = new QLabel(tr("Robot Number"));
-    robotlocationLabel = new QLabel(tr("Robot location"));
-    parameterOk = new QPushButton(tr("OK"));
-    locationChange = new QPushButton(tr("Change"));
+    parameterBox = new QGroupBox(tr("第一步：设置参数"));
+    parameterBox->setStyleSheet(qss1);
+    robotNumberLaber = new QLabel(tr("机器人数量"));
+    robotNumberLaber->setToolTip(tr("追击者数量"));
+    robotlocationLabel = new QLabel(tr("机器人位置"));
+    robotlocationLabel->setToolTip(tr("启动stage手动修改机器人位置"));
+    parameterOk = new QPushButton(tr("确认"));
+    locationChange = new QPushButton(tr("改变位置"));
     connect(locationChange,SIGNAL(clicked(bool)),this,SLOT(createNewThread()));
     robotNumberBox= new QComboBox();
     for(int i=4;i<=7;i++)
     {
         robotNumberBox->addItem(QString("%1").arg(i-1));
     }
-    connect(robotNumberBox,SIGNAL(activated(QString)),this,SLOT(getnumber(QString)));
+    openWorldButton = new QPushButton(tr("打开world文件"));
+    connect(openWorldButton,SIGNAL(clicked(bool)),this,SLOT(openWorld()));
+    connect(robotNumberBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(getnumber(QString)));
     connect(parameterOk,SIGNAL(clicked(bool)),this,SLOT(createWorld()));
     connect(parameterOk,SIGNAL(clicked(bool)),this,SLOT(showButtons()));
     QGridLayout *hbox = new QGridLayout;
@@ -53,6 +56,7 @@ QGroupBox *MainWindow::createParameterBox()
     hbox->addWidget(parameterOk,0,2);
     hbox->addWidget(robotlocationLabel,1,0);
     hbox->addWidget(locationChange,1,1);
+    hbox->addWidget(openWorldButton,1,2);
     parameterBox->setLayout(hbox);
 
     return parameterBox;
@@ -60,9 +64,13 @@ QGroupBox *MainWindow::createParameterBox()
 
 QGroupBox *MainWindow::createloadBox()
 {
-    loadBox = new QGroupBox(tr("&loadActive"));
-    createLaunchButton= new QPushButton(tr("Create Launch"));
+    loadBox = new QGroupBox(tr("第二步：加载任务"));
+    loadBox->setStyleSheet(qss1);
+    createLaunchButton= new QPushButton(tr("创建Launch文件"));
+    openLaunchButton = new QPushButton(tr("打开launch文件"));
+    connect(openLaunchButton,SIGNAL(clicked(bool)),this,SLOT(openLaunch()));
     robot0 = new QLabel(tr("Goal"));
+    robot0->setToolTip(tr("被追击目标"));
     robot1 = new QLabel(tr("robot-1"));
     robot2 = new QLabel(tr("robot-2"));
     robot3 = new QLabel(tr("robot-3"));
@@ -97,7 +105,7 @@ QGroupBox *MainWindow::createloadBox()
     robot4Distance = new QCheckBox(tr("Distance"));
     robot5Distance = new QCheckBox(tr("Distance"));
     robot6Distance = new QCheckBox(tr("Distance"));
-    checkOk = new QPushButton(tr("Checked"));
+    checkOk = new QPushButton(tr("确认"));
     hbox->addWidget(robot0Avoid,0,1);
     hbox->addWidget(robot1Action,1,1);
     hbox->addWidget(robot2Action,2,1);
@@ -113,6 +121,7 @@ QGroupBox *MainWindow::createloadBox()
     hbox->addWidget(robot6Distance,6,2);
     hbox->addWidget(createLaunchButton,7,1);
     hbox->addWidget(checkOk,7,0);
+    hbox->addWidget(openLaunchButton,7,2);
     connect(checkOk,SIGNAL(clicked(bool)),this,SLOT(checkBoxChangeTest()));
     connect(createLaunchButton,SIGNAL(clicked(bool)),this,SLOT(createLaunch()));
     robot4->hide();
@@ -131,9 +140,10 @@ QGroupBox *MainWindow::createloadBox()
 
 QGroupBox *MainWindow::createcommandBox()
 {
-    commandBox = new QGroupBox(tr("Command"));
-    startCommandButton = new QPushButton(tr("Start"));
-    endCommandButton = new QPushButton(tr("End"));
+    commandBox = new QGroupBox(tr("第三步：执行任务"));
+    commandBox->setStyleSheet(qss1);
+    startCommandButton = new QPushButton(tr("开始仿真"));
+    endCommandButton = new QPushButton(tr("结束仿真"));
     connect(startCommandButton,SIGNAL(clicked(bool)),this,SLOT(createStartThread()));
     connect(endCommandButton,SIGNAL(clicked(bool)),this,SLOT(createEndThread()));
     QGridLayout *grid = new QGridLayout;
@@ -148,6 +158,7 @@ void MainWindow::createNewThread()
     newThread = new std::thread(&MainWindow::changeLocation,this);
     newThread->detach();
 }
+
 void MainWindow::changeLocation()
 {
 
@@ -173,7 +184,7 @@ void MainWindow::createWorld()
         return;
     else if (robotnumber > 3)
     {
-        for(int i=3;i<=robotnumber;i++)
+        for(int i=3;i<robotnumber;i++)
         {
             QString content = QString("erratic \n(\npose [%1 -7.667 5.000 0.000]\nname \"turtle%2").arg(i).arg(i);
             content +="\"\ncolor \"red\"\n)\n\n";
@@ -369,4 +380,14 @@ void MainWindow::createEndThread()
 {
     newThread = new std::thread(&MainWindow::endCommand,this);
     newThread->detach();
+}
+
+void MainWindow::openWorld()
+{
+    QProcess::execute("gedit /home/zhang/catkin_ws/src/wolf/world/new.world");
+}
+
+void MainWindow::openLaunch()
+{
+    QProcess::execute("gedit /home/zhang/catkin_ws/src/wolf/launch/new.launch");
 }
