@@ -1,0 +1,6 @@
+<launch>
+<node name = "stageros" pkg="stage_ros" type = "stageros" args="$(find wolf)/world/new.world" />
+<node name="map_server" pkg="map_server" type="map_server" args="$(find wolf)/world/tutorial400.yaml" respawn="false"> 
+<param name="frame_id" value="/map" />
+  </node>
+</launch>

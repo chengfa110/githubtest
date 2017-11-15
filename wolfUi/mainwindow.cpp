@@ -65,7 +65,6 @@ QGroupBox *MainWindow::createParameterBox()
     hbox->addWidget(locationChange,1,1);
     hbox->addWidget(openWorldButton,1,2);
     parameterBox->setLayout(hbox);
-
     return parameterBox;
 }
 
@@ -154,9 +153,9 @@ QGroupBox *MainWindow::createloadBox()
 }
 
 /*
- **********
+ ***********
   启动和结束
- **********
+ ***********
 */
 
 QGroupBox *MainWindow::createcommandBox()
@@ -166,7 +165,9 @@ QGroupBox *MainWindow::createcommandBox()
     startCommandButton = new QPushButton(tr("开始仿真"));
     endCommandButton = new QPushButton(tr("结束仿真"));
     connect(startCommandButton,SIGNAL(clicked(bool)),this,SLOT(createStartThread()));
+    connect(startCommandButton,SIGNAL(clicked(bool)),this,SLOT(clickedShowCommand()));
     connect(endCommandButton,SIGNAL(clicked(bool)),this,SLOT(createEndThread()));
+    connect(endCommandButton,SIGNAL(clicked(bool)),this,SLOT(clickedHideCommand()));
     QGridLayout *grid = new QGridLayout;
     grid->addWidget(startCommandButton,0,0);
     grid->addWidget(endCommandButton,1,0);
@@ -183,14 +184,14 @@ void MainWindow::createNewThread()
 void MainWindow::changeLocation()
 {
 
-    system("roslaunch wolf test.launch");
+    system("roslaunch wolf modify.launch");
     //exit(0);
 }
 
 /*
- ************
+ **************
   创建world文件
- ************
+ **************
 */
 
 void MainWindow::createWorld()
@@ -222,9 +223,9 @@ void MainWindow::createWorld()
 }
 
 /*
- **************
+ ***************
   创建launch文件
- **************
+ ***************
 */
 
 void MainWindow::createLaunch()
@@ -435,4 +436,60 @@ void MainWindow::openWorld()
 void MainWindow::openLaunch()
 {
     QProcess::execute("gedit /home/zhang/catkin_ws/src/wolf/launch/new.launch");
+}
+
+void MainWindow::clickedShowCommand()
+{
+    command = new QDialog;
+    actionButton = new QPushButton(tr("追击指令"));
+    attactButton = new QPushButton(tr("攻击指令"));
+    connect(actionButton,SIGNAL(clicked(bool)),this,SLOT(createActionThread()));
+    connect(attactButton,SIGNAL(clicked(bool)),this,SLOT(createAttactThread()));
+    QGridLayout *grid = new QGridLayout;
+    grid->addWidget(actionButton,1,0);
+    grid->addWidget(attactButton,1,1);
+    command->setLayout(grid);
+    command->setModal(false);
+    command->show();
+}
+
+/*
+    ***********
+    发布追击指令
+    ***********
+*/
+
+void MainWindow::actionCommand()
+{
+//    system("cd /home/zhang/catkin_ws/");
+    system("rostopic pub -1 /action wolf/action \"action: 1\"");
+}
+
+void MainWindow::createActionThread()
+{
+    newThread1 = new std::thread(&MainWindow::actionCommand,this);
+    newThread1->detach();
+}
+
+/*
+    ***********
+    发布攻击指令
+    ***********
+*/
+
+void MainWindow::attactCommand()
+{
+//    system("cd /home/zhang/catkin_ws/");
+    system("rostopic pub -1 /attack wolf/attack \"attack:1\"");
+}
+
+void MainWindow::createAttactThread()
+{
+    newThread1 = new std::thread(&MainWindow::attactCommand,this);
+    newThread1->detach();
+}
+
+void MainWindow::clickedHideCommand()
+{
+    command->hide();
 }

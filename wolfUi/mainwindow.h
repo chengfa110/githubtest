@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtWidgets>
 #include <thread>
+#include <QDialog>
 using namespace std;
 namespace Ui {
 class MainWindow;
@@ -21,6 +22,8 @@ public:
     void changeLocation();
     void startCommand();
     void endCommand();
+    void actionCommand();
+    void attactCommand();
 
     QString qss1="QGroupBox {\
     border: 3px solid #2B2B2B;\
@@ -36,6 +39,7 @@ public:
     }";
 
 private:
+    QDialog *command;
     QGroupBox *createParameterBox();
     QGroupBox *createloadBox();
     QGroupBox *createcommandBox();
@@ -61,6 +65,8 @@ private:
     QPushButton *checkOk;
     QPushButton *openWorldButton;
     QPushButton *openLaunchButton;
+    QPushButton *actionButton;
+    QPushButton *attactButton;
     QComboBox *robotNumberBox;
     QCheckBox *robot0Avoid;
     QCheckBox *robot1Action;
@@ -76,6 +82,7 @@ private:
     QCheckBox *robot5Distance;
     QCheckBox *robot6Distance;
     std::thread *newThread;
+    std::thread *newThread1;
 
 public slots:
 
@@ -87,8 +94,12 @@ public slots:
     void createLaunch();
     void createStartThread();
     void createEndThread();
+    void createActionThread();
+    void createAttactThread();
     void openWorld();
     void openLaunch();
+    void clickedShowCommand();
+    void clickedHideCommand();
 };
 
 #endif // MAINWINDOW_H

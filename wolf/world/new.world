@@ -92,3 +92,17 @@ erratic
 name "robot_3" 
 color "red")
 
+erratic 
+(
+pose [-15.162 -5.119 5.000 0.000]
+name "turtle3"
+color "red"
+)
+
+erratic 
+(
+pose [-15.340 4.941 5.000 0.000]
+name "turtle4"
+color "red"
+)
+

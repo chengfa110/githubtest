@@ -3,6 +3,7 @@
 #include<wolf/decide.h>
 #include<wolf/attack.h>
 #include<geometry_msgs/Twist.h>
+#include<wolf/action.h>
 #include <iostream>
 using namespace std;
 
@@ -10,22 +11,27 @@ class action{
   public:
   void start();
   float speed=0.3;
+  bool action1=false;
   private:
   ros::NodeHandle node;
   ros::Publisher cmdPub;
   ros::Publisher attackPub;
   void decideCB(const wolf::decide decide);
+  void actionCB(const wolf::action action);
   ros::Subscriber decideSub;
+  ros::Subscriber actionSub;
   ros::Subscriber attackSub;
   void attackCB(const wolf::attack attack);
   int robot_id;
   float distance=100;
   int energy=200;
+
 };
+
 
 void action::decideCB(const wolf::decide decide){
  geometry_msgs::Twist twist;
- if(decide.tan<decide.cos){
+ if(action1&&decide.tan<decide.cos){
   if(robot_id==decide.decide){
     distance=decide.distance;
     if(decide.x==1)
@@ -50,7 +56,7 @@ void action::decideCB(const wolf::decide decide){
     cmdPub.publish(twist);
     }
  }
- else if(decide.tan>=decide.cos){
+ else if(action1&&decide.tan>=decide.cos){
   if(robot_id==decide.decide){
     distance=decide.distance;
     if(decide.x==1)
@@ -86,12 +92,19 @@ void action::attackCB(const wolf::attack attack){
    }
 }
 
+void action::actionCB(const wolf::action action)
+{
+  if(action.action == 1)
+    action1=true;
+}
+
 void action::start(){
   ros::Rate rate(10);
   ros::param::get("robot_id",robot_id);
   stringstream ss;
   ss<<"/robot_"<<robot_id<<"/cmd_vel";
   cmdPub=node.advertise<geometry_msgs::Twist>(ss.str(),10);
+  actionSub=node.subscribe<wolf::action>("/action",1,&action::actionCB,this);
   attackPub=node.advertise<wolf::attack>("/attack",10);
   decideSub=node.subscribe("/decide",1,&action::decideCB,this);
   attackSub=node.subscribe("/attack",1,&action::attackCB,this);
