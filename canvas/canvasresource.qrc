@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/new/canvas">
+        <file>canvasResource/if_play_2628488.svg</file>
+        <file>canvasResource/start_here_24px_572110_easyicon.net.png</file>
+        <file>canvasResource/route.svg</file>
+        <file>canvasResource/config.svg</file>
+        <file>canvasResource/network.svg</file>
+        <file>canvasResource/wifi.png</file>
+        <file>canvasResource/linkline.png</file>
+        <file>canvasResource/addordelete.png</file>
+    </qresource>
+</RCC>

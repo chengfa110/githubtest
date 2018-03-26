@@ -1,0 +1,7 @@
+node1 10.0.0.1 c8:d3:ff:c0:c2:c7
+node2 10.0.0.2 c8:d3:ff:c1:c2:c7
+node3 10.0.0.3 c8:d3:ff:c2:c2:c7
+node4 10.0.0.4 c8:d3:ff:c3:c2:c7
+node5 10.0.0.5 c8:d3:ff:c4:c2:c7
+node6 10.0.0.6 c8:d3:ff:c5:c2:c7
+node7 10.0.0.7 c8:d3:ff:c6:c2:c7
